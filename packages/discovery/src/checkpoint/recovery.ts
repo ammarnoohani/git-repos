@@ -105,6 +105,9 @@ export class CheckpointManager {
       cp.lastSuccessfulRun = nowIso;
     } else {
       cp.status = 'failed';
+      if (params.completedWindows.length > 0) {
+        cp.lastSuccessfulRun = nowIso;
+      }
     }
 
     this.storage.saveCheckpoint(cp);

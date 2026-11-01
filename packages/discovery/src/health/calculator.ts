@@ -26,7 +26,7 @@ export function calculateDiscoveryHealth(
     return t >= past24hMs;
   }).length;
 
-  let minutesSinceLastSuccess = Infinity;
+  let minutesSinceLastSuccess: number | null = null;
   if (lastSuccessIso) {
     minutesSinceLastSuccess = (now.getTime() - new Date(lastSuccessIso).getTime()) / (60 * 1000);
   }
@@ -34,17 +34,20 @@ export function calculateDiscoveryHealth(
   let status: DiscoveryHealth['status'] = 'healthy';
   let message: string | undefined;
 
-  if (consecutiveFailures >= HEALTH_MAX_CONSECUTIVE_FAILURES || minutesSinceLastSuccess >= HEALTH_FAILING_MINUTES) {
+  if (consecutiveFailures >= HEALTH_MAX_CONSECUTIVE_FAILURES) {
     status = 'failing';
-    message = consecutiveFailures >= HEALTH_MAX_CONSECUTIVE_FAILURES
-      ? `${consecutiveFailures} consecutive runs failed`
-      : `No successful run in ${Math.round(minutesSinceLastSuccess)} minutes`;
-  } else if (minutesSinceLastSuccess >= HEALTH_DELAYED_MINUTES) {
+    message = `${consecutiveFailures} consecutive runs failed`;
+  } else if (minutesSinceLastSuccess !== null && minutesSinceLastSuccess >= HEALTH_FAILING_MINUTES) {
+    status = 'failing';
+    message = `No successful run in ${Math.round(minutesSinceLastSuccess)} minutes`;
+  } else if (minutesSinceLastSuccess !== null && minutesSinceLastSuccess >= HEALTH_DELAYED_MINUTES) {
     status = 'delayed';
     message = `Last successful discovery was ${Math.round(minutesSinceLastSuccess)} minutes ago`;
   } else if (windowsPending > 0 || truncated24h > 0) {
     status = 'degraded';
-    message = windowsPending > 0 ? `${windowsPending} pending windows to retry` : `${truncated24h} truncated windows in last 24h`;
+    message = windowsPending > 0
+      ? `${windowsPending} pending window${windowsPending > 1 ? 's' : ''} queued for next cycle`
+      : `${truncated24h} truncated windows in last 24h`;
   } else {
     status = 'healthy';
     message = 'Discovery pipeline running normally';

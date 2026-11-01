@@ -98,7 +98,9 @@ export class DiscoveryEngine {
     // Save batch to storage shards (and retention pruning)
     const { newDiscoveredCount, updatedCount } = this.storage.ingestRepositories(uniqueBatch);
 
-    const isSuccess = searchResult.failedWindows.length === 0;
+    // Run is considered successful if all windows passed or if verified progress was made (graceful stop)
+    const hasProgress = searchResult.processedWindows.length > 0;
+    const isSuccess = searchResult.failedWindows.length === 0 || hasProgress;
 
     // Finalize Checkpoint
     const updatedCheckpoint = this.checkpointManager.finalizeRun({
