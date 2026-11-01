@@ -61,7 +61,7 @@ jobs:
           NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
           FORCE_FULL_SCAN: ${{ inputs.force_full_scan }}
           TEST_NOTIFICATION: ${{ inputs.test_notification }}
-          DATA_DIR: ./data
+          DATA_DIR: ${{ github.workspace }}/data
         run: |
           if [ "${{ inputs.test_notification }}" = "true" ]; then
             npm run discover:once --workspace=@github-discovery/discovery -- --mode=test-notify
@@ -74,13 +74,13 @@ jobs:
       - name: Publish Data Branch (Single Squashed Commit)
         if: inputs.test_notification != true
         run: |
-          cd data
+          cd "${{ github.workspace }}/data"
           # Remove old git metadata if cloned to prepare clean orphan commit
           rm -rf .git
           git init -b data
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Auto-discovery sync: $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "No data changes"
+          git commit --allow-empty -m "Auto-discovery sync: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           git push -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git data
 

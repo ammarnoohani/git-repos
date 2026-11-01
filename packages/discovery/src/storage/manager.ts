@@ -31,10 +31,13 @@ export class StorageManager {
   private maxReposPerShard: number;
 
   constructor(options: StorageOptions = {}) {
-    const defaultDir =
-      process.env.DATA_DIR ||
-      (fs.existsSync(path.resolve('../../package.json')) ? '../../data' : './data');
-    this.dataDir = path.resolve(options.dataDir || defaultDir);
+    let targetDir = options.dataDir || process.env.DATA_DIR;
+    if (!targetDir) {
+      targetDir = fs.existsSync(path.resolve('../../package.json')) ? '../../data' : './data';
+    } else if (!path.isAbsolute(targetDir) && fs.existsSync(path.resolve('../../package.json'))) {
+      targetDir = path.resolve('../../', targetDir);
+    }
+    this.dataDir = path.resolve(targetDir);
     this.reposDir = path.join(this.dataDir, 'repos');
     this.stateDir = path.join(this.dataDir, 'state');
     this.retentionDays = options.retentionDays ?? (parseInt(process.env.RETENTION_DAYS || String(DEFAULT_RETENTION_DAYS), 10));
