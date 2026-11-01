@@ -1,0 +1,23 @@
+{
+  "name": "@github-discovery/discovery",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "discover:once": "tsx src/cli/index.ts --mode=discover",
+    "digest": "tsx src/cli/index.ts --mode=digest",
+    "test:notify": "tsx src/cli/index.ts --mode=test-notify"
+  },
+  "dependencies": {
+    "@github-discovery/shared": "*",
+    "dotenv": "^16.4.7",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

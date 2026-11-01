@@ -1,0 +1,85 @@
+name: Discover Repositories
+
+on:
+  schedule:
+    # Runs approximately every 10 minutes (GitHub scheduled actions are best-effort)
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    inputs:
+      force_full_scan:
+        description: 'Force a full scan without checkpoint window bounds'
+        required: false
+        type: boolean
+        default: false
+      test_notification:
+        description: 'Send a single test notification and exit'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: discover
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout Code (main)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Fetch Data Branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p data
+          # Attempt shallow checkout of existing data branch into ./data
+          git clone --depth 1 --branch data https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git ./data || echo "No existing data branch found. Initializing fresh."
+
+      - name: Run Discovery Job
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_API_TOKEN || secrets.GITHUB_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          FORCE_FULL_SCAN: ${{ inputs.force_full_scan }}
+          TEST_NOTIFICATION: ${{ inputs.test_notification }}
+          DATA_DIR: ./data
+        run: |
+          if [ "${{ inputs.test_notification }}" = "true" ]; then
+            npm run discover:once --workspace=@github-discovery/discovery -- --mode=test-notify
+          elif [ "${{ inputs.force_full_scan }}" = "true" ]; then
+            npm run discover:once --workspace=@github-discovery/discovery -- --force-full-scan
+          else
+            npm run discover:once --workspace=@github-discovery/discovery
+          fi
+
+      - name: Publish Data Branch (Single Squashed Commit)
+        if: inputs.test_notification != true
+        run: |
+          cd data
+          # Remove old git metadata if cloned to prepare clean orphan commit
+          rm -rf .git
+          git init -b data
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Auto-discovery sync: $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "No data changes"
+          git push -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git data

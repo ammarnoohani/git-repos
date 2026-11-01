@@ -1,0 +1,23 @@
+{
+  "name": "github-discovery",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@github-discovery/web",
+    "build": "npm run build --workspaces",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "npm run typecheck --workspaces",
+    "discover:once": "npm run discover:once --workspace=@github-discovery/discovery",
+    "digest": "npm run digest --workspace=@github-discovery/discovery"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

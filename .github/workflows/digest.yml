@@ -1,0 +1,60 @@
+name: Scheduled Digest
+
+on:
+  schedule:
+    # Trigger hourly; the job checks state/notified.json to verify if a digest is due
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: digest
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Code (main)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Fetch Data Branch
+        run: |
+          mkdir -p data
+          git clone --depth 1 --branch data https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git ./data || echo "No data branch yet"
+
+      - name: Run Digest Job
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NOTIFY_EMAIL: ${{ secrets.NOTIFY_EMAIL }}
+          DATA_DIR: ./data
+        run: |
+          npm run digest --workspace=@github-discovery/discovery
+
+      - name: Update Data Branch if Notified Changed
+        run: |
+          cd data
+          if [ -d .git ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add state/notified.json
+            git commit -m "Digest timestamp update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "No digest updates to commit"
+            git push origin data || echo "Push skipped"
+          fi
