@@ -192,3 +192,4 @@ export class GitHubClient {
     return this.request<GitHubSearchItem>(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`);
   }
 }
+

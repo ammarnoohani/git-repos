@@ -233,3 +233,4 @@ export const RepoDetailPage: React.FC = () => {
     </div>
   );
 };
+

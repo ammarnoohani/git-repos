@@ -152,3 +152,4 @@ Copy `.env.example` to `.env` to customize settings:
 ## 📜 License
 
 MIT License. Free for open-source and personal use.
+

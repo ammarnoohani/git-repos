@@ -30,3 +30,4 @@ describe('Opt-in Live GitHub Smoke Test', () => {
     expect(parsed.success).toBe(true);
   });
 });
+

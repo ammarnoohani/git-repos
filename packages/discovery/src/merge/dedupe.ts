@@ -50,3 +50,4 @@ export function mergeRepositoryRecords(existing: Repository, incoming: Repositor
   merged.score = calculateRepoScore(merged);
   return merged;
 }
+

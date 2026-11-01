@@ -15,3 +15,4 @@ export const DEFAULT_QUERY_FILTERS = 'fork:false';
 export const HEALTH_DELAYED_MINUTES = 30;
 export const HEALTH_FAILING_MINUTES = 90;
 export const HEALTH_MAX_CONSECUTIVE_FAILURES = 3;
+

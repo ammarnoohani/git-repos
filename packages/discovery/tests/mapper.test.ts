@@ -121,3 +121,4 @@ describe('GitHub Item Mapper', () => {
     expect(validation.success).toBe(true);
   });
 });
+

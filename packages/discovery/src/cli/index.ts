@@ -67,3 +67,4 @@ main().catch((err) => {
   console.error('Unhandled fatal error in CLI:', err);
   process.exit(1);
 });
+

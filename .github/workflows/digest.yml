@@ -58,3 +58,4 @@ jobs:
             git commit -m "Digest timestamp update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "No digest updates to commit"
             git push origin data || echo "Push skipped"
           fi
+

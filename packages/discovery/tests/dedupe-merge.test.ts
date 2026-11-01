@@ -63,3 +63,4 @@ describe('Deduplication & Record Merging', () => {
     expect(mergedA?.stars).toBe(8);
   });
 });
+

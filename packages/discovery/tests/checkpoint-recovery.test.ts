@@ -97,3 +97,4 @@ describe('Checkpoint Management & Recovery', () => {
     expect(reloadedManager.getCheckpoint().status).toBe('completed');
   });
 });
+

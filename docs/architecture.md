@@ -53,3 +53,4 @@ Vercel Hobby (Static build from 'main' branch)
 - All writes are validated using Zod schemas before being committed.
 - Checkpoints advance **only** after files are validated and written to disk.
 - In the event of a network failure, rate limit, or runner timeout, incomplete windows are placed into `pendingWindows` and retried on the subsequent run.
+

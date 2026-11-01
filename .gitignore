@@ -27,3 +27,4 @@ Thumbs.db
 # Data directory (managed on dedicated 'data' branch in git)
 # Local runs write to ./data, which should not be committed to main
 /data
+

@@ -42,3 +42,4 @@ export function calculateRepoScore(repo: Partial<Repository>): number {
 
   return score;
 }
+

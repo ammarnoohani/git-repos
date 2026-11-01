@@ -132,3 +132,4 @@ describe('Frontend Search & Filtering Logic', () => {
     expect(res[2].id).toBe(3); // 2026-10-25
   });
 });
+

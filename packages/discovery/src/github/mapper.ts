@@ -96,3 +96,4 @@ export function mapEnrichedItemToRepository(
 
   return mapGitHubSearchItemToRepository(merged, 'enriched', nowIso);
 }
+

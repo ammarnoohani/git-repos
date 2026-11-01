@@ -52,3 +52,4 @@ GitHub enforces anti-abuse and concurrent request limits:
   - The engine recursively queries `[T_start, T_mid]` and `[T_mid, T_end]`.
   - Termination condition: If `total_count <= 1000`, or window duration reaches 1 second.
   - If a 1-second window still yields `> 1000` results, it is recorded as `truncated` in the checkpoint and manifest. The search is executed with `sort=stars&order=desc` to guarantee the most prominent repositories within the window are captured.
+

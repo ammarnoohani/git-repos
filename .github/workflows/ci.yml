@@ -32,3 +32,4 @@ jobs:
 
       - name: Build Web & Discovery
         run: npm run build
+

@@ -95,3 +95,4 @@ describe('Scheduled Digest Logic', () => {
     expect(notifiedState.channels.telegram?.lastDigestAt?.['hourly']).toBeDefined();
   });
 });
+

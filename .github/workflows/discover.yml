@@ -83,3 +83,4 @@ jobs:
           git add -A
           git commit -m "Auto-discovery sync: $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || echo "No data changes"
           git push -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git data
+

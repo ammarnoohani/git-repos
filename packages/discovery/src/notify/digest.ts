@@ -125,3 +125,4 @@ export class DigestManager {
     return { sent: sentAny, repoCount: topRepos.length };
   }
 }
+
