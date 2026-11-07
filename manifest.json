@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0",
+  "lastUpdated": "2026-11-07T15:17:12.468Z",
+  "totalDiscovered": 85815,
+  "shards": [
+    {
+      "date": "2026-11-02",
+      "path": "repos/2026-11-02.json",
+      "count": 5000,
+      "bytes": 4937373,
+      "truncated": true
+    },
+    {
+      "date": "2026-11-01",
+      "path": "repos/2026-11-01.json",
+      "count": 5000,
+      "bytes": 4699056,
+      "truncated": true
+    }
+  ],
+  "health": {
+    "status": "degraded",
+    "lastSuccessfulRun": "2026-11-07T15:17:12.593Z",
+    "consecutiveFailures": 0,
+    "windowsPending": 834,
+    "truncatedWindows24h": 0,
+    "rateLimitStatus": {
+      "limit": 30,
+      "remaining": 14,
+      "reset": 1794064632,
+      "used": 16
+    },
+    "lastRunDurationSeconds": 186,
+    "message": "834 pending windows queued for next cycle"
+  },
+  "retentionSettings": {
+    "retentionDays": 14,
+    "maxReposPerShard": 5000
+  }
+}
