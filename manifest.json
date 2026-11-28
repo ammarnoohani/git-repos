@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "lastUpdated": "2026-11-28T10:59:52.646Z",
+  "totalDiscovered": 380627,
+  "shards": [],
+  "health": {
+    "status": "degraded",
+    "lastSuccessfulRun": "2026-11-28T10:59:52.659Z",
+    "consecutiveFailures": 0,
+    "windowsPending": 2747,
+    "truncatedWindows24h": 0,
+    "rateLimitStatus": {
+      "limit": 30,
+      "remaining": 16,
+      "reset": 1795863606,
+      "used": 14
+    },
+    "lastRunDurationSeconds": 169,
+    "message": "2747 pending windows queued for next cycle"
+  },
+  "retentionSettings": {
+    "retentionDays": 14,
+    "maxReposPerShard": 5000
+  }
+}
